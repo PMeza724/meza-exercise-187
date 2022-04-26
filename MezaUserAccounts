@@ -1,0 +1,130 @@
+//Author: Phillip Meza
+//Course: CPT187
+//Purpose:To perform account management 
+//such as the creation and confirmation of usernames and passwords
+//STARTDATE:4/20/2022
+
+package edu.cpt187.meza.exercise6;
+import java.io.PrintWriter;
+import java.io.FileWriter;
+import java.util.Scanner;
+import java.io.FileInputStream;
+import java.io.IOException;
+//opens UserAccounts supporting class
+public class UserAccounts
+{
+	private final int NOT_FOUND = -1;
+	private final int RESET_VALUE = 0;
+	private final int MAXIMUM_RECORDS = 50;
+	private String[] userNames = new String[MAXIMUM_RECORDS];
+	private String[] passwords = new String[MAXIMUM_RECORDS];
+	private String masterFileName = "";
+	private int recordCount = 0;
+	private int searchedIndex = 0;
+	//constructor
+	public UserAccounts(String borrowedFileName)
+	{
+		masterFileName = borrowedFileName;//sets masterFileName
+	}//closes constructor
+	//reads account file and sets userNames and passwords
+	public void setUserAccountArrays()
+	{
+		try
+		{
+			//attempts to open account file
+			Scanner userFile = new Scanner(new FileInputStream(masterFileName));
+			//while next line and less than limit of records
+			while(userFile.hasNext() == true && recordCount < MAXIMUM_RECORDS)
+			{
+				userNames[recordCount] = userFile.next();//sets userNames
+				passwords[recordCount] = userFile.next();//sets passwords
+				recordCount++;//increments recordCount
+			}//closes next line
+			userFile.close();//closes Scanner
+		}//closes try
+		//if file read fails
+		catch(IOException ex)
+		{
+			recordCount = NOT_FOUND;//sets recordCOunt to negative
+		}//closes catch
+	}//closes setUserAccountArrays
+	//searches arrays for userName input
+	public void setSearchedIndex(String borrowedUserName)
+	{
+		searchedIndex = getSeqSearch(borrowedUserName);//sets searchedIndex to returned value of search	
+	}//closes setSearchedIndex
+	//searches arrays for username and confirms proper password
+	public void setSearchedIndex(String borrowedUserName,String borrowedPassword)
+	{
+		searchedIndex = getSeqSearch(borrowedUserName);//sets searchedIndex to returned value of search	
+		//if correct userName AND wrong password
+		if(searchedIndex >= RESET_VALUE && getPasswordMatch(borrowedPassword) == false)
+		{
+			searchedIndex = NOT_FOUND;//sets searchedIndex to negative
+		}//closes if wrong password
+	}//closes setSearchedIndex
+	//opens and writes to file
+	public void setWriteOneRecord(String borrowedUserName,String borrowedPassword)
+	{
+		//tries to open file and add a line
+		try
+		{
+			PrintWriter filePW = new PrintWriter(new FileWriter(masterFileName),true);//opens file
+			//writes line to file
+			filePW.printf("%n%s\t%s",borrowedUserName, borrowedPassword);
+			recordCount++;//increments record count
+			filePW.close();//closes file
+		}//closes try
+		catch(IOException ex)
+		{
+		
+		}//closes catch
+	}//closes setWriteOrder
+	//searches for username in file and returns index
+	public int getSeqSearch(String borrowedBorrowedUserName)
+	{
+		int localIndex = 0;
+		int localFound = NOT_FOUND;
+		//while localIndex is less than available records
+		while(localIndex < recordCount)
+		{
+			//if ID requested = ID in file
+			if(userNames[localIndex].equalsIgnoreCase(borrowedBorrowedUserName))
+			{
+				localFound = localIndex;//sets localFound to localIndex
+				localIndex = recordCount;//sets localIndex to recordCount
+			}
+			//else (no match)
+			else
+			{
+				localIndex++;//increments localIndex
+			}//closes else
+		}//closes search loop
+		return (localFound);//returns localFound
+	}//closes getSeqSearch
+	//returns comparison of password inputed and password on file
+	public boolean getPasswordMatch(String borrowedBorrowedPassword)
+	{
+		return(passwords[searchedIndex].equals(borrowedBorrowedPassword));//returns boolean of password input compared to password array
+	}//closes getPasswordMatch
+	//returns masterFileName
+	public String getFileName()
+	{
+		return(masterFileName);//returns masterFileName
+	}//closes getFileName
+	//returns MAXIMUM_RECORDS
+	public int getMaximumRecords()
+	{
+		return(MAXIMUM_RECORDS);//returns MAXIMUM_REORDS
+	}//closes getMaximumRecords
+	//returns recordCount
+	public int getRecordCount()
+	{
+		return(recordCount);//returns recordCount
+	}//closes getRecordCount
+	//returns searchedIndex
+	public int getSearchedIndex()
+	{
+		return(searchedIndex);//returns searchedIndex
+	}//closes getSearchedIndex
+}//closes class
