@@ -1,0 +1,54 @@
+//Author: Phillip Meza
+//Course: CPT187
+//Purpose:To document orders by writing to file
+//STARTDATE:4/20/2022
+
+package edu.cpt187.meza.exercise6;
+import java.io.PrintWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class WriteOrder 
+{
+	private boolean fileFoundFlag = false;
+	private String masterFileName = "";
+	private int recordCount = 0;
+	//constructor
+	public WriteOrder(String borrowedFileName)
+	{
+		masterFileName = borrowedFileName;//sets masterFileName
+	}//closes constructor
+	//opens and writes to file
+	public void setWriteOrder(int borrowedID,String borrowedItemName,double borrowedItemPrice,int borrowedQuantity,double borrowedOrderCost)
+	{
+		//tries to open file and add a line
+		try
+		{
+			PrintWriter filePW = new PrintWriter(new FileWriter(masterFileName, fileFoundFlag));//opens file
+			fileFoundFlag = true;//sets FoundFlag to true
+			//writes line to file
+			filePW.printf("%n%d\t%s\t%f\t%d\t%f",borrowedID,borrowedItemName,borrowedItemPrice,borrowedQuantity,borrowedOrderCost);
+			recordCount++;//increments record count
+			filePW.close();//closes file
+		}//closes try
+		catch(IOException ex)
+		{
+			fileFoundFlag = false;//sets found flag to default(false)
+		}//closes catch
+	}//closes setWriteOrder
+	//returns fileFoundFlag
+	public boolean getFileFoundFlag()
+	{
+		return(fileFoundFlag);//returns fileFoundFlg
+	}//closes getFileFoundFlag
+	//returns masterFileName
+	public String getFileName()
+	{
+		return(masterFileName);//returns masterFileName
+	}//closes getFileName
+	//returns recordCount
+	public int getRecordCount()
+	{
+		return(recordCount);//returns recordCount
+	}//closes getRecordCount
+}
